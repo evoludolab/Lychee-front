@@ -19,6 +19,14 @@ contextMenu.add = function (e) {
 		items.push({ title: build.iconic("tags") + lychee.locale["NEW_TAG_ALBUM"], fn: album.addByTags });
 	}
 
+	if (lychee.api_V2 && !lychee.admin) {
+		// remove import from dropbox and server if not admin
+		items.splice(3, 2);
+	} else if (!lychee.dropboxKey || lychee.dropboxKey === "") {
+		// remove import from dropbox if dropboxKey not set
+		items.splice(3, 1);
+	}
+
 	// prepend further buttons if menu bar is reduced on small screens
 	let button_visibility_album = $("#button_visibility_album");
 	if (button_visibility_album && button_visibility_album.css("display") === "none") {
@@ -51,14 +59,6 @@ contextMenu.add = function (e) {
 			visible: true,
 			fn: () => album.setNSFW(album.getID()),
 		});
-	}
-
-	if (lychee.api_V2 && !lychee.admin) {
-		// remove import from dropbox and server if not admin
-		items.splice(3, 2);
-	} else if (!lychee.dropboxKey || lychee.dropboxKey === "") {
-		// remove import from dropbox if dropboxKey not set
-		items.splice(3, 1);
 	}
 
 	basicContext.show(items, e.originalEvent);
